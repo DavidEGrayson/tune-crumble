@@ -1,0 +1,19 @@
+body {
+  background-color: #EEE;
+}
+
+caption {
+  font-size: 20px;
+}
+
+table#itunes_info {
+  min-width: 250px;
+}
+
+.table-info td:first-child {
+  width: 120px;
+}
+
+.table-info label:after {
+  content: ":";
+}

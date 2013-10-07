@@ -2,15 +2,27 @@
 <html>
   <head>
     <script src="jquery-2.0.3.min.js"></script>
+    <link href="david.css" rel="stylesheet" media="screen">
   </head>
   <body>
     <h1>iTunes Director</h1>
     <a href="#" id="refresh">Refresh</a>
     <a href="#" id="media_settings">Media Settings</a>
-    <div>
-      <label>iTunes library modification date</label>
-      <time id="itunes_timestamp">-</time>
-    </div>
+    <table id="itunes_info" class="table-info">
+      <caption>iTunes library</caption>
+      <tr>
+        <td><label>Location</label></td>
+        <td id="itunes_location"></td>
+      </tr>
+      <tr>
+        <td><label>XML filename</label></td>
+        <td id="itunes_xml_filename"></td>
+      </tr>
+      <tr>
+        <td><label for="itunes_timestamp">Modification date</label></td>
+        <td><time id="itunes_timestamp">-</time></td>
+      </tr>
+    </table>
     <script src="david.js"></script>    
   </body>
 </html>

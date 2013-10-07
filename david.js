@@ -15,6 +15,7 @@ $("#media_settings").click(function() {
 
 function onNewMediaSettings(domfs_list) {
   itunes_domfs = findITunesDomfs(domfs_list);
+  itunes_xml_file = null
   readStuff()
 }
 
@@ -50,8 +51,7 @@ function error(context)
 function examineXmlFile(entry) {
   entry.file(function(file) {
     itunes_xml_file = file
-    date = file.lastModifiedDate
-    itunes_timestamp.attr("datetime", date.toISOString()).html(date.toLocaleString())
+    updateItunesInfoTable()    
   }, error("error getting XML File from FileEntry"))
 }
 
@@ -71,6 +71,25 @@ function readStuff()
   }
   else
   {
-    itunes_timestamp.attr("datetime", date.toISOString()).html("-")
+    updateItunesInfoTable();
+  }
+}
+
+function updateItunesInfoTable() {
+  if (itunes_xml_file) {
+    var metadata = chrome.mediaGalleries.getMediaFileSystemMetadata(itunes_domfs);
+    $("#itunes_location").html(metadata.name) // e.g. "iTunes"
+
+    $("#itunes_xml_filename").html(itunes_xml_file.name);
+
+    date = itunes_xml_file.lastModifiedDate
+    $("#itunes_timestamp").attr("datetime", date.toISOString()).html(date.toLocaleString())
+    
+  }
+  else
+  {
+    $("#itunes_location").html("-");
+    $("#itunes_xml_filename").html("-");
+    $("#itunes_timestamp").html("-");
   }
 }
