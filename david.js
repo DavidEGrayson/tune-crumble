@@ -1,9 +1,11 @@
 var itunes_domfs;
 var itunes_xml_file;
 var itunes_timestamp = $("#itunes_timestamp");
+var itunes_xml;
 
-$("#refresh").click(appRefresh);
 $(appRefresh);
+$("#refresh").click(appRefresh);
+$("#load_library").click(loadLibrary);
 
 function appRefresh() {
   loadMediaSettings()
@@ -92,4 +94,24 @@ function updateItunesInfoTable() {
     $("#itunes_xml_filename").html("-");
     $("#itunes_timestamp").html("-");
   }
+}
+
+function loadLibrary() {
+  if (!itunes_xml_file) {
+    console.log("loadLibrary failed: itunes XML file is not present");
+    return;
+  }
+  
+  console.log("Reading XML file...");
+  
+  reader = new FileReader()
+  reader.onerror = error("reading XML file")
+  reader.onloadend = function() {
+    console.log("XML file read completed.")
+    parser = new DOMParser()
+    xml_doc = parser.parseFromString(reader.result, "text/xml")
+    itunes_xml = new ItunesXml(xml_doc)
+    console.log("XML file parsing completed.")
+  }
+  reader.readAsText(itunes_xml_file)
 }
