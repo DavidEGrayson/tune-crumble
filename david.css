@@ -14,6 +14,15 @@ table#itunes_info {
   width: 120px;
 }
 
+.table-info td:nth-child(2) {
+  padding: 1px 10px;
+}
+
 .table-info label:after {
   content: ":";
 }
+
+.user_data {
+  -webkit-user-select: text;
+}
+

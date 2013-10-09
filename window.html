@@ -6,24 +6,40 @@
   </head>
   <body>
     <h1>iTunes Director</h1>
-    <a href="#" id="refresh">Refresh</a>
-    <a href="#" id="media_settings">Media Settings</a>
-    <a href="#" id="load_library">Load Library</a>
-    <table id="itunes_info" class="table-info">
-      <caption>iTunes library</caption>
-      <tr>
-        <td><label>Location</label></td>
-        <td id="itunes_location"></td>
-      </tr>
-      <tr>
-        <td><label>XML filename</label></td>
-        <td id="itunes_xml_filename"></td>
-      </tr>
-      <tr>
-        <td><label for="itunes_timestamp">Modification date</label></td>
-        <td><time id="itunes_timestamp">-</time></td>
-      </tr>
-    </table>
+    
+    <section>
+      <h2>iTunes Library</h2>
+      <a href="#" id="refresh">Refresh</a>
+      <a href="#" id="media_settings">Media Settings</a>
+      <a href="#" id="load_library">Load Library</a>
+      <table id="itunes_info" class="table-info">
+        <tr>
+          <td><label>Location</label></td>
+          <td class="user_data" id="itunes_location"></td>
+        </tr>
+        <tr>
+          <td><label>XML filename</label></td>
+          <td class="user_data" id="itunes_xml_filename"></td>
+        </tr>
+        <tr>
+          <td><label for="itunes_timestamp">Modification date</label></td>
+          <td><time class="user_data" id="itunes_timestamp">-</time></td>
+        </tr>
+      </table>
+    </section>
+    
+    <section>
+      <h2>Device</h2>
+      <a href="#" id="file_system_settings">File System Settings</a>
+      <table id="device_info" class="table-info">
+        <tr>
+          <td><label>Path</label></td>
+          <td class="user_data" id="device_path">-</td>
+        </tr>
+      </table>
+    </section>
+    
+    <script src="itunes_xml.js"></script>
     <script src="itunes_xml.js"></script>
     <script src="david.js"></script>    
   </body>

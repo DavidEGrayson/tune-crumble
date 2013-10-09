@@ -9,7 +9,8 @@
     }
   },
   "permissions": [
-    { "mediaGalleries": ["read"] }
+    { "mediaGalleries": ["read"] },
+    { "fileSystem": ["write", "retainEntries", "directory"] }
   ],
   "icons": { "16": "calculator-16.png", "128": "calculator-128.png" }
 }

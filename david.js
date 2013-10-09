@@ -1,13 +1,45 @@
 var itunes_domfs;
+var itunes_xml_file_entry;
 var itunes_xml_file;
 var itunes_timestamp = $("#itunes_timestamp");
 var itunes_xml;
 
+var device_direntry;
+
 $(appRefresh);
 $("#refresh").click(appRefresh);
 $("#load_library").click(loadLibrary);
+$("#file_system_settings").click(function() {
+  chrome.fileSystem.chooseEntry({type: "openDirectory"}, onNewDeviceDirectory);
+  //chrome.fileSystem.chooseEntry({type: "openFile"}, onNewDeviceDirectory);
+});
 
-function appRefresh() {
+function onNewDeviceDirectory(direntry, list)
+{
+  device_direntry = direntry
+  console.log("new device directory")
+  console.log(direntry)
+  console.log(list)
+  updateDeviceInfo()
+}
+
+function updateDeviceInfo()
+{
+  if (device_direntry)
+  {
+    chrome.fileSystem.getDisplayPath(device_direntry, function(path)
+    {
+      $("#device_path").html(path)
+    });
+  }
+  else
+  {
+    $("#device_path").html("-")
+  }
+}
+
+function appRefresh()
+{
   loadMediaSettings()
 }
 
@@ -51,6 +83,7 @@ function error(context)
 }
 
 function examineXmlFile(entry) {
+  itunes_xml_file_entry = entry
   entry.file(function(file) {
     itunes_xml_file = file
     updateItunesInfoTable()    
@@ -82,6 +115,8 @@ function updateItunesInfoTable() {
     var metadata = chrome.mediaGalleries.getMediaFileSystemMetadata(itunes_domfs);
     $("#itunes_location").html(metadata.name) // e.g. "iTunes"
 
+    //chrome.fileSystem.getDisplayPath(itunes_xml_file_entry, function(path) { $("#itunes_location").html(path + "!") });
+    
     $("#itunes_xml_filename").html(itunes_xml_file.name);
 
     date = itunes_xml_file.lastModifiedDate
