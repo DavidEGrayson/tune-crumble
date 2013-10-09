@@ -4,7 +4,7 @@ $(document).ready(appRefresh);
 
 function appRefresh()
 {
-  loadMediaSettings()
+  iTunesLibrary.loadMediaSettings()
 }
 
 function error(context)

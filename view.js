@@ -1,8 +1,8 @@
 $(document).ready(function() {
   $("#refresh").click(appRefresh)
-  $("#load_library").click(loadLibrary)
+  $("#media_settings").click(iTunesLibrary.openMediaSettings)
+  $("#load_library").click(iTunesLibrary.loadLibrary)
   $("#file_system_settings").click(openFileSystemSettings)
-  $("#media_settings").click(openMediaSettings)
   console.log("added event handlers to buttons")
 });
 

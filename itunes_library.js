@@ -3,82 +3,96 @@ var itunes_xml_file_entry;
 var itunes_xml_file;
 var itunes_xml;
 
-function openMediaSettings() {
-  chrome.mediaGalleries.getMediaFileSystems({interactive: "yes"}, onNewMediaSettings);
-}
-
-function onNewMediaSettings(domfs_list) {
-  itunes_domfs = findITunesDomfs(domfs_list);
-  itunes_xml_file = null
-  readStuff()
-}
-
-function loadMediaSettings(callback) {
-  chrome.mediaGalleries.getMediaFileSystems({interactive: "no"}, function(domfs_list) {
-    onNewMediaSettings(domfs_list);
-    if (callback) { callback(); }
-  });
-}
-
-function findITunesDomfs(domfs_list)
-{
-  for (var i = 0; i < domfs_list.length; i++)
+var iTunesLibrary = {
+  domfs: null,
+  xml_file_entry: null,
+  xml_file: null,
+  xml: null,
+  
+  openMediaSettings: function()
   {
-    var domfs = domfs_list[i];
-    var metadata = chrome.mediaGalleries.getMediaFileSystemMetadata(domfs);
-    if (metadata.name == "iTunes")
+    chrome.mediaGalleries.getMediaFileSystems({interactive: "yes"}, this.onNewMediaSettings);
+  },
+
+  loadMediaSettings: function()
+  {
+  
+    console.log("loadMediaSettings: this")
+    console.log(this)
+    
+    chrome.mediaGalleries.getMediaFileSystems({interactive: "no"}, this.onNewMediaSettings);
+  },
+  
+  onNewMediaSettings: function(domfs_list)
+  {
+    if (this != iTunesLibrary) { iTunesLibrary.onNewMediaSettings(domfs_list); return; }
+    console.log("onNewMediaSettings: this")
+    console.log(this)
+    itunes_domfs = this.findITunesDomfs(domfs_list);
+    itunes_xml_file = null
+    this.readStuff()
+  },
+
+  findITunesDomfs: function(domfs_list)
+  {
+    for (var i = 0; i < domfs_list.length; i++)
     {
-      return domfs;
+      var domfs = domfs_list[i];
+      var metadata = chrome.mediaGalleries.getMediaFileSystemMetadata(domfs);
+      if (metadata.name == "iTunes")
+      {
+        return domfs;
+      }
     }
-  }
-  return null;
-}
+    return null;
+  },
 
-
-function examineXmlFile(entry) {
-  itunes_xml_file_entry = entry
-  entry.file(function(file) {
-    itunes_xml_file = file
-    updateItunesInfoTable()    
-  }, error("error getting XML File from FileEntry"))
-}
-
-function readStuff()
-{
-  if (itunes_domfs)
+  examineXmlFile: function(entry)
   {
-    console.log("itunes domfs exists");
-    
-    itunes_domfs.root.createReader().readEntries(function(a) {
-      console.log("iTunes root entries: ");
-      console.log(a);
-    }, error("getting itunes root entries"));
-    
-    itunes_domfs.root.getFile("iTunes Music Library.xml", {}, examineXmlFile, error("Error getting iTunes Music Library.xml"));
-    //itunes_domfs.root.getFile("iTunes Library.xml", {}, examineXmlFile, error("Error getting iTunes Library.xml"));
-  }
-  else
-  {
-    updateItunesInfoTable();
-  }
-}
+    itunes_xml_file_entry = entry
+    entry.file(function(file) {
+      itunes_xml_file = file
+      updateItunesInfoTable()    
+    }, error("error getting XML File from FileEntry"))
+  },
 
-function loadLibrary() {
-  if (!itunes_xml_file) {
-    console.log("loadLibrary failed: itunes XML file is not present");
-    return;
-  }
+  readStuff: function()
+  {
+    if (itunes_domfs)
+    {
+      console.log("itunes domfs exists");
+      
+      itunes_domfs.root.createReader().readEntries(function(a) {
+        console.log("iTunes root entries: ");
+        console.log(a);
+      }, error("getting itunes root entries"));
+      
+      itunes_domfs.root.getFile("iTunes Music Library.xml", {}, this.examineXmlFile, error("Error getting iTunes Music Library.xml"));
+      //itunes_domfs.root.getFile("iTunes Library.xml", {}, examineXmlFile, error("Error getting iTunes Library.xml"));
+    }
+    else
+    {
+      updateItunesInfoTable();
+    }
+  },
+
+  loadLibrary: function() {
+    if (!itunes_xml_file) {
+      console.log("loadLibrary failed: itunes XML file is not present");
+      return;
+    }
   
-  console.log("Reading XML file...");
-  
-  reader = new FileReader()
-  reader.onerror = error("reading XML file")
-  reader.onloadend = function() {
-    console.log("XML file read completed.")
-    parser = new DOMParser()
-    xml_doc = parser.parseFromString(reader.result, "text/xml")
-    itunes_xml = new ItunesXml(xml_doc)
-    console.log("XML file parsing completed.")
+    console.log("Reading XML file...");
+    
+    reader = new FileReader()
+    reader.onerror = error("reading XML file")
+    reader.onloadend = function() {
+      console.log("XML file read completed.")
+      parser = new DOMParser()
+      xml_doc = parser.parseFromString(reader.result, "text/xml")
+      itunes_xml = new ItunesXml(xml_doc)
+      console.log("XML file parsing completed.")
+    }
+    reader.readAsText(itunes_xml_file)
   }
-  reader.readAsText(itunes_xml_file)
-}
+};
