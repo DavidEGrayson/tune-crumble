@@ -3,29 +3,30 @@
   <head>
     <script src="jquery-2.0.3.min.js"></script>
     <link href="david.css" rel="stylesheet" media="screen">
+    <title>TuneCrumble</title>
   </head>
   <body>
-    <h1>iTunes Director</h1>
+    <h1>TuneCrumble</h1>
     
     <section>
       <h2>iTunes Library</h2>
-      <a href="#" id="refresh">Refresh</a>
-      <a href="#" id="media_settings">Media Settings</a>
-      <a href="#" id="load_library">Load Library</a>
+      <a href="#" id="itunesCmdChange">Change</a>
       <table id="itunes_info" class="table-info">
         <tr>
-          <td><label for="itunes_location">Location</label></td>
-          <td class="user_data" id="itunes_location">-</td>
+          <td><label for="itunesMainFile">Main file</label></td>
+          <td class="userData" id="itunesMainFile">-</td>
         </tr>
         <tr>
-          <td><label for="itunes_xml_filename">XML filename</label></td>
-          <td class="user_data" id="itunes_xml_filename">-</td>
-        </tr>
-        <tr>
-          <td><label for="itunes_timestamp">Modification date</label></td>
-          <td><time class="user_data" id="itunes_timestamp">-</time></td>
+          <td><label for="itunesTimestamp">Modification date</label></td>
+          <td><time class="userData" id="itunes_timestamp">-</time></td>
         </tr>
       </table>
+      
+      <h3>Content directories</h3>
+      <a href="#" id="itunesContentDirsAdd">Add</a>
+      <ul id="itunes_content_directories">
+      </ul>
+      
     </section>
     
     <section>
@@ -39,9 +40,7 @@
       </table>
     </section>
     
-    <script src="itunes_xml.js"></script>
-    <script src="itunes_library.js"></script>
-    <script src="david.js"></script> 
+    <script src="view_controller.js"></script>
     <script src="view.js"></script>
   </body>
 </html>
