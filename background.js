@@ -16,6 +16,12 @@ var itunesLibraryInfo = new ItunesLibraryInfo();
 
 var viewUpdaters = []
 
+function viewUpdate(funcname) {
+  for(var i = 0; i < viewUpdaters.length; i++) {
+    viewUpdaters[i][funcname]();
+  }
+}
+
 function registerViewUpdater(viewUpdater)
 {
   viewUpdaters.push(viewUpdater)
@@ -25,9 +31,15 @@ function registerViewUpdater(viewUpdater)
 var cmd = {
   itunesSelectMainFile: function(entry) {
     itunesLibraryInfo.setMainFile(entry);
+    viewUpdate("itunesMainFile")
   },
   
   itunesAddContentDir: function(entry) {
     itunesLibraryInfo.addContentDir(entry);
+    viewUpdate("itunesContentDirs")
   }
+}
+
+var model = {
+  itunesLibraryInfo: itunesLibraryInfo
 }

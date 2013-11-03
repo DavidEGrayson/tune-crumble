@@ -13,3 +13,7 @@ ItunesLibraryInfo.prototype.setMainFile = function(entry) {
 ItunesLibraryInfo.prototype.addContentDir = function(entry) {
   this.contentDirEntries.push(entry)
 }
+
+ItunesLibraryInfo.prototype.getMainFileName = function(callback) {
+  chrome.fileSystem.getDisplayPath(this.mainFileEntry, callback)
+}

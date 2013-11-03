@@ -22,10 +22,12 @@ var viewController = {
 }
 
 var backgroundPage;
+var model;
 var cmd;
 chrome.runtime.getBackgroundPage(function(bg)
 {
   backgroundPage = bg;
   cmd = backgroundPage.cmd;
+  model = backgroundPage.model;
   backgroundPage.registerViewUpdater(updater)
 });
