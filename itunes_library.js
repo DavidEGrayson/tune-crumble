@@ -25,6 +25,7 @@ var iTunesLibrary = {
   
   onNewMediaSettings: function(domfs_list)
   {
+    // TODO: see if we can get rid of this ugliness using prototypes or something
     if (this != iTunesLibrary) { iTunesLibrary.onNewMediaSettings(domfs_list); return; }
     console.log("onNewMediaSettings: this")
     console.log(this)
