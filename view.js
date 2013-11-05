@@ -6,11 +6,18 @@ var updater = {
     })
   },
   
-  itunesContentDires: function() {
+  itunesContentDirs: function() {
   
+  },
+  
+  all: function() {
+    updater.itunesMainFile()
+    updater.itunesContentDirs()
   }
 }
 
 $("#itunesCmdChange").click(viewController.itunesCmdChange)
 
 $("#itunesContentDirsAdd").click(viewController.itunesContentDirsAdd)
+
+updater.all();
