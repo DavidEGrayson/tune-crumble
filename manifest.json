@@ -5,12 +5,13 @@
   "manifest_version": 2,
   "app": {
     "background": {
-      "scripts": ["itunes_library_info.js", "background.js"],
+      "scripts": ["persistence.js", "itunes_library_info.js", "background.js"],
       "persistent": false
     }
   },
   "permissions": [
-    { "fileSystem": ["write", "retainEntries", "directory"] }
+    { "fileSystem": ["write", "retainEntries", "directory"] },
+    "storage"
   ],
   "icons": { "16": "tunecrumble-16.png", "128": "tunecrumble-128.png" }
 }

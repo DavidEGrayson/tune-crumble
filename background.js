@@ -31,11 +31,13 @@ function registerViewUpdater(viewUpdater)
 var cmd = {
   itunesSelectMainFile: function(entry) {
     itunesLibraryInfo.setMainFile(entry);
+    persistence.save()
     viewUpdate("itunesMainFile")
   },
   
   itunesAddContentDir: function(entry) {
     itunesLibraryInfo.addContentDir(entry);
+    persistence.save()
     viewUpdate("itunesContentDirs")
   }
 }
@@ -43,3 +45,5 @@ var cmd = {
 var model = {
   itunesLibraryInfo: itunesLibraryInfo
 }
+
+persistence.load()
