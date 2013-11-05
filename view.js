@@ -1,23 +1,23 @@
 var updater = {
   itunesMainFile: function() {
-    console.log("updating itunes main file")
+    console.log("itunesMainFile")
+
     model.itunesLibraryInfo.getMainFileName(function(name) {
-      $("#itunesMainFile").html(name)
+      $("#itunesMainFile").html(name || "-")
+    })
+    model.itunesLibraryInfo.getMainFileTimestamp(function(stamp) {
+      var str = stamp != null ? stamp.toLocaleString() : "-"
+      $("#itunesTimestamp").html(str)
     })
   },
   
   itunesContentDirs: function() {
   
   },
-  
-  all: function() {
-    updater.itunesMainFile()
-    updater.itunesContentDirs()
-  }
 }
 
-$("#itunesCmdChange").click(viewController.itunesCmdChange)
-
-$("#itunesContentDirsAdd").click(viewController.itunesContentDirsAdd)
-
-updater.all();
+function viewStart()
+{
+  $("#itunesCmdChange").click(viewController.itunesCmdChange);
+  $("#itunesContentDirsAdd").click(viewController.itunesContentDirsAdd);
+}

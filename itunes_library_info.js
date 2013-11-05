@@ -15,5 +15,34 @@ ItunesLibraryInfo.prototype.addContentDir = function(entry) {
 }
 
 ItunesLibraryInfo.prototype.getMainFileName = function(callback) {
-  chrome.fileSystem.getDisplayPath(this.mainFileEntry, callback)
+  if (this.mainFileEntry)
+  {
+    chrome.fileSystem.getDisplayPath(this.mainFileEntry, callback)
+  }
+  else
+  {
+    callback(null)
+  }
+}
+
+ItunesLibraryInfo.prototype.getMainFileTimestamp = function(callback) {
+  if (this.mainFileEntry)
+  {
+    console.log("tmphax trying to get metadata")
+    this.mainFileEntry.getMetadata(function(metadata) {
+      console.log("tmphax got metadata")
+      console.log(metadata)
+      callback(metadata.modificationTime);
+    },
+    function(err) {
+      console.log("error getting metadata for mainFileEntry")
+      console.log(err)
+      callback(null)
+    });
+  }
+  else
+  {
+    console.log("tmphax just calling callback with null")
+    callback(null)
+  }
 }
