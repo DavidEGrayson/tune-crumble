@@ -7,7 +7,10 @@ var persistence = new function(){
   }
   
   this.load = function() {
-    this.getItunesMainFileEntry(itunesLibraryInfo.setMainFile)
+    this.getItunesMainFileEntry(function(e)
+    {
+      itunesLibraryInfo.setMainFile(e)
+    })
   }
   
   this.saveItunesLibraryInfo = function() {

@@ -10,7 +10,7 @@ ItunesLibraryInfo.prototype =
 {
   setMainFile: function(entry) {
     console.log("setMainFile")
-    console.log(entry)
+    console.log(this)
     this.mainFileEntry = entry
   },
 
