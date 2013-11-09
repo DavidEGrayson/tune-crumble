@@ -11,13 +11,24 @@ var updater = {
     })
   },
   
-  itunesContentDirs: function() {
-  
+  itunesMusicFolders: function() {
+    model.itunesLibraryInfo.getMusicFolderNames(function(names) {
+      var ul = $("ul#itunesMusicFolders")
+      ul.empty()
+      
+      for(var i = 0; i < names.length; i++)
+      {
+        var name = names[i];
+        var li = document.createElement("li")
+        li.appendChild(document.createTextNode(name))
+        ul.append(li)
+      }
+    })
   },
 }
 
-function viewStart()
+function viewInit()
 {
   $("#itunesCmdChange").click(viewController.itunesCmdChange);
-  $("#itunesContentDirsAdd").click(viewController.itunesContentDirsAdd);
+  $("#itunesMusicFoldersAdd").click(viewController.itunesMusicFoldersAdd);
 }

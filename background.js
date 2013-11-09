@@ -24,6 +24,10 @@ function viewUpdate(funcname) {
 
 function registerViewUpdater(viewUpdater)
 {
+  if (!viewUpdaters)
+  {
+    console.log("oh noes viewUpdaters is not around")
+  }
   viewUpdaters.push(viewUpdater)
 }
 
@@ -35,10 +39,10 @@ var cmd = {
     viewUpdate("itunesMainFile")
   },
   
-  itunesAddContentDir: function(entry) {
-    itunesLibraryInfo.addContentDir(entry);
+  itunesAddMusicFolder: function(entry) {
+    itunesLibraryInfo.addMusicFolder(entry);
     persistence.save()
-    viewUpdate("itunesContentDirs")
+    viewUpdate("itunesMusicFolders")
   }
 }
 

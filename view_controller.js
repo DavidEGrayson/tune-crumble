@@ -11,31 +11,37 @@ var viewController = {
     })
   },
   
-  itunesContentDirsAdd: function() {
+  itunesMusicFoldersAdd: function() {
     chrome.fileSystem.chooseEntry({type: "openDirectory"}, function(entry, list)
     {
-      cmd.itunesAddContentDir(entry)
+      cmd.itunesAddMusicFolder(entry)
     })
   }
 }
 
 updater.all = function() {
   updater.itunesMainFile()
-  updater.itunesContentDirs()
+  updater.itunesMusicFolders()
 }
 
-var backgroundPage;
-var model;
-var cmd;
+var bg;    // The background page.
+var model; // The model: can tell us the state of the app.
+var cmd;   // The command processor: can handle commands that change the state of the app.
 
-chrome.runtime.getBackgroundPage(function(bg)
+chrome.runtime.getBackgroundPage(function(bgp)
 {
-  backgroundPage = bg;
-  cmd = backgroundPage.cmd;
-  model = backgroundPage.model;  
+  bg = bgp;
+  cmd = bg.cmd;
+  model = bg.model;  
 
-  // Here is basically where the program starts running.
-  viewStart()
-  backgroundPage.registerViewUpdater(updater)
-  updater.all()
+  setTimeout(viewRun, 0)
+  // if we just call viewRun that would work too, but then Chrome
+  // refuses to show a nice backtrace for errors in viewRun.
 });
+
+function viewRun() {
+  // Here is basically where the program starts running.
+  viewInit()
+  bg.registerViewUpdater(updater)
+  updater.all()
+}

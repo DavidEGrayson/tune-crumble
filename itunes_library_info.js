@@ -1,7 +1,11 @@
+// This model class keeps track of the iTunes XML file specified by the user
+// and a list of directories specified by the user that should contain all the
+// files.
+
 function ItunesLibraryInfo()
 {
   this.mainFileEntry = null
-  this.contentDirEntries = []
+  this.musicFolders = []
 }
 
 // Takes a FileEntry object.  That class is documented here:
@@ -9,45 +13,22 @@ function ItunesLibraryInfo()
 ItunesLibraryInfo.prototype =
 {
   setMainFile: function(entry) {
-    console.log("setMainFile")
-    console.log(this)
     this.mainFileEntry = entry
   },
 
-  addContentDir: function(entry) {
-    this.contentDirEntries.push(entry)
+  addMusicFolder: function(entry) {
+    this.musicFolders.push(entry)
   },
 
   getMainFileName: function(callback) {
-    if (this.mainFileEntry)
-    {
-      chrome.fileSystem.getDisplayPath(this.mainFileEntry, callback)
-    }
-    else
-    {
-      callback(null)
-    }
+    getDisplayPathOrNull(this.mainFileEntry, callback)
   },
 
   getMainFileTimestamp: function(callback) {
-    if (this.mainFileEntry)
-    {
-      console.log("tmphax trying to get metadata")
-      this.mainFileEntry.getMetadata(function(metadata) {
-        console.log("tmphax got metadata")
-        console.log(metadata)
-        callback(metadata.modificationTime);
-      },
-      function(err) {
-        console.log("error getting metadata for mainFileEntry")
-        console.log(err)
-        callback(null)
-      });
-    }
-    else
-    {
-      console.log("tmphax just calling callback with null")
-      callback(null)
-    }
-  }
+    getTimestampOrNull(this.mainFileEntry, callback)
+  },
+  
+  getMusicFolderNames: function(callback) {
+    getDisplayPathList(this.musicFolders, callback)
+  },
 }

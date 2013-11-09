@@ -1,11 +1,11 @@
 {
   "name": "TuneCrumble",
-  "description": "Smart replication for your iTunes library.",
+  "description": "Smart, controllable replication for your iTunes library.",
   "version": "0.1",
   "manifest_version": 2,
   "app": {
     "background": {
-      "scripts": ["persistence.js", "itunes_library_info.js", "background.js"],
+      "scripts": ["util.js", "persistence.js", "itunes_library_info.js", "background.js"],
       "persistent": false
     }
   },
