@@ -1,4 +1,4 @@
-var viewController = {
+var viewCmd = {
   itunesCmdChange: function() {
     var opts = {
       type: "openFile",
@@ -16,11 +16,6 @@ var viewController = {
     {
       cmd.itunesAddMusicFolder(entry)
     })
-  },
-  
-  itunesMusicFolderRemove: function(index)
-  {
-    cmd.itunesMusicFolderRemove(index)
   }
 }
 
@@ -37,7 +32,9 @@ chrome.runtime.getBackgroundPage(function(bgp)
 {
   bg = bgp;
   cmd = bg.cmd;
-  model = bg.model;  
+  model = bg.model;
+  
+  viewCmd.__proto__ = cmd
 
   setTimeout(viewRun, 0)
   // if we just call viewRun that would work too, but then Chrome

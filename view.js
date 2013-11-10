@@ -1,7 +1,5 @@
 var updater = {
   itunesMainFile: function() {
-    console.log("itunesMainFile")
-
     model.itunesLibraryInfo.getMainFileName(function(name) {
       $("#itunesMainFile").html(name || "-")
     })
@@ -29,8 +27,8 @@ var updater = {
 
 function viewInit()
 {
-  $("#itunesCmdChange").click(viewController.itunesCmdChange);
-  $("#itunesMusicFoldersAdd").click(viewController.itunesMusicFoldersAdd);
+  $("#itunesCmdChange").click(viewCmd.itunesCmdChange);
+  $("#itunesMusicFoldersAdd").click(viewCmd.itunesMusicFoldersAdd);
   
   contextMenusInit()
 }
@@ -41,7 +39,7 @@ var contextMenuItems =
     handleClick: function(node)
     {
       var index = $.makeArray($("ul li")).indexOf(node)
-      viewController.itunesMusicFolderRemove(index)
+      viewCmd.itunesMusicFolderRemove(index)
     },
     
     add: function()
