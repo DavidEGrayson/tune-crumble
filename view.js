@@ -32,7 +32,7 @@ function viewInit()
   $("#itunesCmdChange").click(viewController.itunesCmdChange);
   $("#itunesMusicFoldersAdd").click(viewController.itunesMusicFoldersAdd);
   
-  viewContextMenuInit()
+  contextMenusInit()
 }
 
 var contextMenuItems =
@@ -56,33 +56,6 @@ var contextMenuItems =
   }
 }
 
-// TODO: move this messy stuff out of the view
-function viewContextMenuInit()
-{
-  var clickedElement;
-
-  chrome.contextMenus.removeAll(function() {
-    
-  });
-  
-  chrome.contextMenus.onClicked.addListener(function(info, tab) {
-    if (!document.hasFocus()) {
-      return;
-    }
-
-    console.log("context menu item " + info.menuItemId + " was clicked")
-    contextMenuItems[info.menuItemId].handleClick(clickedElement)
-  });
-  
-  // TODO: do this the jquery way?
-  $(document).mousedown(function(event){
-    if (event.button !== 2) {
-      return false;
-    }
-    clickedElement = event.target
-    viewUpdateContextMenus(clickedElement)
-  })
-}
 
 // This is called when an element in the page is right-clicked on.
 // Its job is to update the context menus.
@@ -90,7 +63,6 @@ function viewUpdateContextMenus(node)
 {
   if($.makeArray($("ul li")).indexOf(node) >= 0)
   {
-    console.log("adding the remove from list item")
     contextMenuItems.removeFromList.add()
   }
   else
@@ -98,3 +70,4 @@ function viewUpdateContextMenus(node)
     chrome.contextMenus.remove("removeFromList")
   }
 }
+
