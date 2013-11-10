@@ -20,6 +20,10 @@ ItunesLibraryInfo.prototype =
     this.musicFolders.push(entry)
   },
 
+  musicFolderRemove: function(index) {
+    this.musicFolders.splice(index, 1)
+  },
+
   getMainFileName: function(callback) {
     getDisplayPathOrNull(this.mainFileEntry, callback)
   },
@@ -31,4 +35,5 @@ ItunesLibraryInfo.prototype =
   getMusicFolderNames: function(callback) {
     getDisplayPathList(this.musicFolders, callback)
   },
+  
 }

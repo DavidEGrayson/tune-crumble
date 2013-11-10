@@ -38,10 +38,10 @@ function viewInit()
 var contextMenuItems =
 {
   removeFromList: {
-    handleClick: function(element)
+    handleClick: function(node)
     {
-      console.log("handle removing something from list")
-      console.log(element)
+      var index = $.makeArray($("ul li")).indexOf(node)
+      viewController.itunesMusicFolderRemove(index)
     },
     
     add: function()

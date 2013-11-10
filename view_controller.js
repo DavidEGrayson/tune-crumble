@@ -16,6 +16,11 @@ var viewController = {
     {
       cmd.itunesAddMusicFolder(entry)
     })
+  },
+  
+  itunesMusicFolderRemove: function(index)
+  {
+    cmd.itunesMusicFolderRemove(index)
   }
 }
 

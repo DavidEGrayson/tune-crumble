@@ -7,17 +7,7 @@ function contextMenusInit()
   var clickedElement;
 
   chrome.contextMenus.removeAll();
-  
-  chrome.contextMenus.onClicked.addListener(function(info, tab) {
-    if (!document.hasFocus()) {
-      return;
-    }
 
-    console.log("context menu item " + info.menuItemId + " was clicked")
-    contextMenuItems[info.menuItemId].handleClick(clickedElement)
-  });
-  
-  // TODO: do this the jquery way?
   $(document).mousedown(function(event){
     if (event.button !== 2) {
       return false;
@@ -25,4 +15,13 @@ function contextMenusInit()
     clickedElement = event.target
     viewUpdateContextMenus(clickedElement)
   })
+  
+  chrome.contextMenus.onClicked.addListener(function(info, tab) {
+    if (!document.hasFocus()) {
+      return;
+    }
+
+    contextMenuItems[info.menuItemId].handleClick(clickedElement)
+  });
+  
 }

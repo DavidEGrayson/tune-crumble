@@ -40,7 +40,13 @@ var cmd = {
   },
   
   itunesAddMusicFolder: function(entry) {
-    itunesLibraryInfo.addMusicFolder(entry);
+    itunesLibraryInfo.addMusicFolder(entry)
+    persistence.save()
+    viewUpdate("itunesMusicFolders")
+  },
+  
+  itunesMusicFolderRemove: function(index) {
+    itunesLibraryInfo.musicFolderRemove(index)
     persistence.save()
     viewUpdate("itunesMusicFolders")
   }
