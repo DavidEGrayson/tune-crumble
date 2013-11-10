@@ -31,4 +31,51 @@ function viewInit()
 {
   $("#itunesCmdChange").click(viewController.itunesCmdChange);
   $("#itunesMusicFoldersAdd").click(viewController.itunesMusicFoldersAdd);
+  
+  viewContextMenuInit()
+}
+
+function viewContextMenuInit()
+{
+  chrome.contextMenus.removeAll(function() {
+    
+  });
+  
+  chrome.contextMenus.onClicked.addListener(function(info, tab) {
+    if (!document.hasFocus()) {
+      return;
+    }
+
+    console.log("context menu was clicked")
+    console.log(info)
+    console.log(tab)
+  });
+  
+  // TODO: do this the jquery way?
+  $(document).mousedown(function(event){
+    if (event.button !== 2) {
+      return false;
+    }
+    
+    if($.makeArray($("ul li")).indexOf(event.target) >= 0)
+    {
+      console.log("adding the remove from list item")
+      addMenuRemoveFromList()
+    }
+    else
+    {
+      chrome.contextMenus.remove("removeFromList")
+    }
+
+  })
+}
+
+function addMenuRemoveFromList()
+{
+  chrome.contextMenus.create({
+    title: "Remove from list",
+    id: "removeFromList",
+    contexts: ['all']
+    }
+  )
 }

@@ -11,7 +11,8 @@
   },
   "permissions": [
     { "fileSystem": ["write", "retainEntries", "directory"] },
-    "storage"
+    "storage",
+    "contextMenus"
   ],
   "icons": { "16": "tunecrumble-16.png", "128": "tunecrumble-128.png" }
 }
