@@ -2,7 +2,6 @@ var persistence = new function(){
   var storage = chrome.storage.local
 
   this.save = function() {
-    console.log("saving all settings")
     this.saveItunesLibraryInfo()
   }
   
@@ -11,9 +10,21 @@ var persistence = new function(){
     {
       itunesLibraryInfo.setMainFile(e)
     })
+    this.getItunesLibraryMusicFolders(function(entries)
+    {
+      console.log("final callback for music folders retrieval got")
+      console.log(entries)
+      itunesLibraryInfo.musicFolders = entries
+    })
   }
   
   this.saveItunesLibraryInfo = function() {
+    this.saveItunesLibraryMainFile()
+    this.saveItunesLibraryMusicFolders()
+  }
+  
+  this.saveItunesLibraryMainFile = function()
+  {
     var info = model.itunesLibraryInfo;
     var stringId;
     if (info.mainFileEntry)
@@ -24,32 +35,73 @@ var persistence = new function(){
     {
       stringId = null;
     }
-    console.log("Trying storing itunesMainFileId " + stringId)
-    storage.set({"itunesMainFileId": stringId}, function() {
-      console.log("Success storing itunesMainFileId " + stringId)
-    })
-    
+    storage.set({"itunesMainFileId": stringId}, function() {})
   }
   
   this.getItunesMainFileEntry = function(callback) {
-    storage.get('itunesMainFileId', function(m)
+    storage.get("itunesMainFileId", function(m)
     {
-      var stringId = m['itunesMainFileId'];
-      console.log("retrieved itunes main file id from storage: " + stringId)
-      chrome.fileSystem.isRestorable(stringId, function(restorable)
+      restoreEntryOrNull(m["itunesMainFileId"], callback)
+    })
+  }
+  
+  this.saveItunesLibraryMusicFolders = function() {
+    var ids = model.itunesLibraryInfo.musicFolders.map(function(entry)
+    {
+      return chrome.fileSystem.retainEntry(entry)
+    })
+    console.log("setting itunes music folders")
+    console.log(ids)
+    storage.set({"itunesMusicFolders": ids}, function() {})
+  }
+  
+  function restoreEntryOrNull(id, callback)
+  {
+    if (id == null)
+    {
+      callback(null)
+      return
+    }
+    
+    chrome.fileSystem.isRestorable(id, function(restorable)
+    {
+      if (!restorable)
       {
-        if (!restorable)
-        {
-          console.log("Weird: itunes main file id (" + stringId + ") is not restorable")
-          callback(null)
-          return;
-        }
-        
-        chrome.fileSystem.restoreEntry(stringId, function(entry)
-        {
-          callback(entry);
-        });
+        console.log("weird: file is not restorable: " + id)
+        callback(null)
+        return;
+      }
+      
+      chrome.fileSystem.restoreEntry(id, function(entry)
+      {
+        callback(entry);
+      });
+    })
+  }
+  
+  this.getItunesLibraryMusicFolders = function(callback) {
+    storage.get("itunesMusicFolders", function(m)
+    {
+      setTimeout(function(){ //tmphax
+      
+      var ids = m["itunesMusicFolders"]
+      
+      if (!ids)
+      {
+        callback([])
+        return
+      }
+      
+      ids.mapWithCallback(restoreEntryOrNull, function(entries)
+      {
+        // If any of the folders were not restorable, there will be nulls in the
+        // array that we should strip out.
+        entries.delete(null)
+        callback(entries)
       })
+      
+      },0); //tmphax
+      
     })
   }
 }()

@@ -7,14 +7,28 @@ var viewCmd = {
     }
     chrome.fileSystem.chooseEntry(opts, function(entry, list)
     {
-      cmd.itunesSelectMainFile(entry)
+      if (entry)
+      {
+        cmd.itunesSelectMainFile(entry)
+      }
+      else
+      {
+        console.log("User failed to select iTunes main file.")
+      }
     })
   },
-  
+
   itunesMusicFoldersAdd: function() {
     chrome.fileSystem.chooseEntry({type: "openDirectory"}, function(entry, list)
     {
-      cmd.itunesAddMusicFolder(entry)
+      if (entry)
+      {
+        cmd.itunesAddMusicFolder(entry)
+      }
+      else
+      {
+        console.log("User failed to select new iTunes music folder.")
+      }
     })
   }
 }
@@ -33,7 +47,7 @@ chrome.runtime.getBackgroundPage(function(bgp)
   bg = bgp;
   cmd = bg.cmd;
   model = bg.model;
-  
+
   viewCmd.__proto__ = cmd
 
   setTimeout(viewRun, 0)

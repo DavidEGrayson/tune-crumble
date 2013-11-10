@@ -37,6 +37,18 @@ function getDisplayPathList(entries, callback)
   entries.mapWithCallback(chrome.fileSystem.getDisplayPath, callback)
 }
 
+Array.prototype.delete = function(value) {
+  for (var i = 0; i < this.length; i++)
+  {
+    if (this[i] == value)
+    {
+      this.splice(i, 1);
+      i--;
+    }
+  }
+  return this;
+}
+
 Array.prototype.mapWithCallback = function(mapper, callback)
 {
   var result = []
