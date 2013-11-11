@@ -6,12 +6,12 @@
   "app": {
     "background": {
       "scripts": [
-        "util.js",
-        "cmd.js",
-        "view_updater_registry.js",
-        "persistence.js",
-        "itunes_library_info.js",
-        "background.js"
+        "background/util.js",
+        "background/cmd.js",
+        "background/view_updater_registry.js",
+        "background/persistence.js",
+        "background/itunes_library_info.js",
+        "background/background.js"
       ],
       "persistent": false
     }
@@ -21,5 +21,5 @@
     "storage",
     "contextMenus"
   ],
-  "icons": { "16": "tunecrumble-16.png", "128": "tunecrumble-128.png" }
+  "icons": { "16": "skin/tunecrumble-16.png", "128": "skin/tunecrumble-128.png" }
 }
