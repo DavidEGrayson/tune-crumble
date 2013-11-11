@@ -1,61 +1,31 @@
-var viewCmd = {
-  itunesCmdChange: function() {
-    var opts = {
-      type: "openFile",
-      suggestedName: "iTunes Library.xml",
-      accepts: [{description: "iTunes Library XML file (*.xml)", extensions: ["xml"]}]
-    }
-    chrome.fileSystem.chooseEntry(opts, function(entry, list)
-    {
-      if (entry)
-      {
-        cmd.itunesSelectMainFile(entry)
-      }
-      else
-      {
-        console.log("User failed to select iTunes main file.")
-      }
-    })
-  },
+// view_controller.js basically has any part of the view that shouldn't change
+// if someone made a new skin for the app, whereas view.js and the HTML files
+// *only* store things that would change when the skin changes.
+// This separation was inspired by Coding Horror.
 
-  itunesMusicFoldersAdd: function() {
-    chrome.fileSystem.chooseEntry({type: "openDirectory"}, function(entry, list)
-    {
-      if (entry)
-      {
-        cmd.itunesAddMusicFolder(entry)
-      }
-      else
-      {
-        console.log("User failed to select new iTunes music folder.")
-      }
-    })
-  }
-}
-
-updater.all = function() {
+updater.all = function()
+{
   updater.itunesMainFile()
   updater.itunesMusicFolders()
 }
 
-var bg;    // The background page.
-var model; // The model: can tell us the state of the app.
-var cmd;   // The command processor: can handle commands that change the state of the app.
+var bg      // The background page.
+var model   // The model: can tell us the state of the app.
+var viewCmd // Processes all commands from the view.
 
 chrome.runtime.getBackgroundPage(function(bgp)
 {
-  bg = bgp;
-  cmd = bg.cmd;
-  model = bg.model;
-
-  viewCmd.__proto__ = cmd
+  bg = bgp
+  model = bg.model
+  viewCmd = newViewCmd(bg.cmd)
 
   setTimeout(viewRun, 0)
   // if we just call viewRun that would work too, but then Chrome
   // refuses to show a nice backtrace for errors in viewRun.
 });
 
-function viewRun() {
+function viewRun()
+{
   // Here is basically where the program starts running.
   viewInit()
   bg.registerViewUpdater(updater)

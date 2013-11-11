@@ -5,7 +5,14 @@
   "manifest_version": 2,
   "app": {
     "background": {
-      "scripts": ["util.js", "persistence.js", "itunes_library_info.js", "background.js"],
+      "scripts": [
+        "util.js",
+        "cmd.js",
+        "view_updater_registry.js",
+        "persistence.js",
+        "itunes_library_info.js",
+        "background.js"
+      ],
       "persistent": false
     }
   },
