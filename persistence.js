@@ -1,58 +1,61 @@
-var persistence = new function(){
-  var storage = chrome.storage.local
+// The Persistence class handles commands to transfer data between the model and the
+// chrome.storage API.
+// Transferring to the model is called loading and transferring to storage is called saving.
+// Persistence does not know about how the model is created or every aspect of it.  It just knows
+// about the parts that get persisted.
+// TODO: handle any failures that happen in storage.set
 
-  this.save = function() {
-    this.saveItunesLibraryInfo()
+function Persistence(model){
+  this.storage = chrome.storage.local
+  
+  this.save = function(model) {
+    this.saveItunesLibraryInfo(model.itunesLibraryInfo)
   }
   
-  this.load = function() {
-    this.getItunesMainFileEntry(function(e)
+  this.load = function(model) {
+    info = model.itunesLibraryInfo
+    this.getItunesMainFileEntry(function(entry)
     {
-      itunesLibraryInfo.setMainFile(e)
+      info.mainFileEntry = entry
     })
     this.getItunesLibraryMusicFolders(function(entries)
     {
-      console.log("final callback for music folders retrieval got")
-      console.log(entries)
-      itunesLibraryInfo.musicFolders = entries
+      info.musicFolders = entries
     })
   }
   
-  this.saveItunesLibraryInfo = function() {
-    this.saveItunesLibraryMainFile()
-    this.saveItunesLibraryMusicFolders()
+  this.saveItunesLibraryInfo = function(info) {
+    this.saveItunesLibraryMainFile(info.mainFileEntry)
+    this.saveItunesLibraryMusicFolders(info.musicFolders)
   }
   
-  this.saveItunesLibraryMainFile = function()
+  this.saveItunesLibraryMainFile = function(entry)
   {
-    var info = model.itunesLibraryInfo;
     var stringId;
-    if (info.mainFileEntry)
+    if (entry)
     {
-      stringId = chrome.fileSystem.retainEntry(info.mainFileEntry)
+      stringId = chrome.fileSystem.retainEntry(entry)
     }
     else
     {
       stringId = null;
     }
-    storage.set({"itunesMainFileId": stringId}, function() {})
+    this.storage.set({"itunesMainFileId": stringId}, function() {})
   }
   
   this.getItunesMainFileEntry = function(callback) {
-    storage.get("itunesMainFileId", function(m)
+    this.storage.get("itunesMainFileId", function(m)
     {
       restoreEntryOrNull(m["itunesMainFileId"], callback)
     })
   }
   
-  this.saveItunesLibraryMusicFolders = function() {
-    var ids = model.itunesLibraryInfo.musicFolders.map(function(entry)
+  this.saveItunesLibraryMusicFolders = function(entries) {
+    var ids = entries.map(function(entry)
     {
       return chrome.fileSystem.retainEntry(entry)
-    })
-    console.log("setting itunes music folders")
-    console.log(ids)
-    storage.set({"itunesMusicFolders": ids}, function() {})
+    }) // TODO: see if we don't need to define a function here and can just use retainEntry
+    this.storage.set({"itunesMusicFolders": ids}, function() {})
   }
   
   function restoreEntryOrNull(id, callback)
@@ -75,12 +78,12 @@ var persistence = new function(){
       chrome.fileSystem.restoreEntry(id, function(entry)
       {
         callback(entry);
-      });
+      })
     })
   }
   
   this.getItunesLibraryMusicFolders = function(callback) {
-    storage.get("itunesMusicFolders", function(m)
+    this.storage.get("itunesMusicFolders", function(m)
     {
       var ids = m["itunesMusicFolders"]
       
@@ -99,4 +102,4 @@ var persistence = new function(){
       })      
     })
   }
-}()
+}

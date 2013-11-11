@@ -12,10 +12,6 @@ chrome.app.runtime.onLaunched.addListener(function() {
   });
 });
 
-var itunesLibraryInfo = new ItunesLibraryInfo();
-
-var viewUpdaters = []
-
 function viewUpdate(funcname) {
   for(var i = 0; i < viewUpdaters.length; i++) {
     viewUpdaters[i][funcname]();
@@ -34,26 +30,31 @@ function registerViewUpdater(viewUpdater)
 // The cmd object receives all commands from the view.
 var cmd = {
   itunesSelectMainFile: function(entry) {
-    itunesLibraryInfo.setMainFile(entry);
-    persistence.save()
+    itunesLibraryInfo.setMainFile(entry)
+    persistence.saveItunesLibraryInfo(model.itunesLibraryInfo)
     viewUpdate("itunesMainFile")
   },
   
   itunesAddMusicFolder: function(entry) {
     itunesLibraryInfo.addMusicFolder(entry)
-    persistence.save()
+    persistence.saveItunesLibraryInfo(model.itunesLibraryInfo)
     viewUpdate("itunesMusicFolders")
   },
   
   itunesMusicFolderRemove: function(index) {
     itunesLibraryInfo.musicFolderRemove(index)
-    persistence.save()
+    persistence.saveItunesLibraryInfo(model.itunesLibraryInfo)
     viewUpdate("itunesMusicFolders")
   }
 }
 
+
+var itunesLibraryInfo = new ItunesLibraryInfo();
+
+var viewUpdaters = []
 var model = {
   itunesLibraryInfo: itunesLibraryInfo
 }
 
-persistence.load()
+persistence = new Persistence()
+persistence.load(model)
