@@ -56,5 +56,5 @@ var model = {
   itunesLibraryInfo: itunesLibraryInfo
 }
 
-persistence = new Persistence()
+var persistence = new Persistence()
 persistence.load(model)

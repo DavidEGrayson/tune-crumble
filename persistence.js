@@ -53,8 +53,9 @@ function Persistence(model){
   this.saveItunesLibraryMusicFolders = function(entries) {
     var ids = entries.map(function(entry)
     {
+      // We need a function here because chrome.fileSystme.retainEntry is picky about its arguments.
       return chrome.fileSystem.retainEntry(entry)
-    }) // TODO: see if we don't need to define a function here and can just use retainEntry
+    })
     this.storage.set({"itunesMusicFolders": ids}, function() {})
   }
   
