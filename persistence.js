@@ -82,8 +82,6 @@ var persistence = new function(){
   this.getItunesLibraryMusicFolders = function(callback) {
     storage.get("itunesMusicFolders", function(m)
     {
-      setTimeout(function(){ //tmphax
-      
       var ids = m["itunesMusicFolders"]
       
       if (!ids)
@@ -98,10 +96,7 @@ var persistence = new function(){
         // array that we should strip out.
         entries.delete(null)
         callback(entries)
-      })
-      
-      },0); //tmphax
-      
+      })      
     })
   }
 }()
