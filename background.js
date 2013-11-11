@@ -12,12 +12,11 @@ chrome.app.runtime.onLaunched.addListener(function() {
   });
 });
 
-var viewUpdaterRegistry = new ViewUpdaterRegistry()
+// Create all the global variables used by the background page.
+// For ease of testing, no other background javascript except background.js
+// should be accessing these global variables.
 
-function registerViewUpdater(updater)
-{
-  viewUpdaterRegistry.register(updater)
-}
+var viewUpdaterRegistry = new ViewUpdaterRegistry()
 
 var itunesLibraryInfo = new ItunesLibraryInfo()
 
@@ -30,3 +29,10 @@ var persistence = new Persistence()
 persistence.load(model)
 
 var cmd = newCmd(model, persistence, viewUpdaterRegistry)
+
+// Create any extra things needed for our interface to the outside world.
+function registerViewUpdater(updater)
+{
+  viewUpdaterRegistry.register(updater)
+}
+
