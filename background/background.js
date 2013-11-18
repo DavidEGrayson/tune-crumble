@@ -25,7 +25,8 @@ var model =
   itunesLibraryInfo: itunesLibraryInfo
 }
 
-var persistence = new Persistence()
+var storage = new Storage(chrome.storage.local)
+var persistence = new Persistence(storage)
 var modelDoneLoading = persistence.load(model)
 
 modelDoneLoading.done()  // Report any errors loading the moadel.  TODO: do this bettter

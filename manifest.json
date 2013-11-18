@@ -10,6 +10,7 @@
         "background/util.js",
         "background/cmd.js",
         "background/view_updater_registry.js",
+        "background/storage.js",
         "background/persistence.js",
         "background/itunes_library_info.js",
         "background/background.js"

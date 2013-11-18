@@ -1,37 +1,14 @@
 // The Persistence class handles commands to transfer data between the model and the
-// chrome.storage API.
+// promise-based storage API provided by storage.js.
 // Transferring to the model is called loading and transferring to storage is called saving.
 // Persistence does not know about how the model is created or every aspect of it.  It just knows
 // about the parts that get persisted.
-// TODO: handle any failures that happen in storage.set
+// TODO: make sure errors from this level are getting handled correctly and perhaps shown to the user
 
-function Persistence(model){
-  var storageRaw = chrome.storage.local
-  this.storage = {
-    set: function(data)
-    {
-      var deferred = Q.defer()
-      storageRaw.set(data, function() {
-        deferred.rejectWithChromeError() || deferred.resolve(null)
-      })
-      return deferred.promise
-    },
+function Persistence(storage)
+{
+  this.storage = storage
 
-    get: function(key)
-    {
-      return this.getMultiple(key).get(key)
-    },
-    
-    getMultiple: function(keys)
-    {
-      var deferred = Q.defer()
-      storageRaw.get(keys, function(items) {
-        deferred.rejectWithChromeError() || deferred.resolve(items)
-      })
-      return deferred.promise
-    }
-  }
-  
   this.save = function(model) {
     var promises = [
       this.saveItunesLibraryInfo(model.itunesLibraryInfo),
