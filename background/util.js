@@ -49,6 +49,7 @@ Array.prototype.delete = function(value) {
   return this;
 }
 
+// TODO: get rid of this because we should be doing this with Q
 Array.prototype.mapWithCallback = function(mapper, callback)
 {
   var result = []
@@ -72,5 +73,18 @@ Array.prototype.mapWithCallback = function(mapper, callback)
         }
       }.bind(this))
     }).call(this, i)
+  }
+}
+
+Q.defer.prototype.rejectWithChromeError = function()
+{
+  if (chrome.runtime.lastError)
+  {
+    this.reject(chrome.runtime.lastError)
+    return true;
+  }
+  else
+  {
+    return false;
   }
 }

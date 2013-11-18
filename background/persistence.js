@@ -12,30 +12,21 @@ function Persistence(model){
     {
       var deferred = Q.defer()
       storageRaw.set(data, function() {
-        if(chrome.runtime.lastError)
-        {
-          deferred.reject(chrome.runtime.lastError)
-        }
-        else
-        {
-          deferred.resolve(null)
-        }
+        deferred.rejectWithChromeError() || deferred.resolve(null)
       })
       return deferred.promise
     },
+
+    get: function(key)
+    {
+      return this.getMultiple(key).get(key)
+    },
     
-    get: function(keys)
+    getMultiple: function(keys)
     {
       var deferred = Q.defer()
       storageRaw.get(keys, function(items) {
-        if(chrome.runtime.lastError)
-        {
-          deferred.reject(chrome.runtime.lastError)
-        }
-        else
-        {
-          deferred.resolve(items)
-        }
+        deferred.rejectWithChromeError() || deferred.resolve(items)
       })
       return deferred.promise
     }
@@ -77,10 +68,7 @@ function Persistence(model){
   }
   
   this.getItunesMainFileEntry = function(callback) {
-    return this.storage.get("itunesMainFileId").then(function(m)
-    {
-      restoreEntryOrNull(m["itunesMainFileId"], callback)
-    })
+    return this.storage.get("itunesMainFileId").then(restoreEntry).then(callback)
   }
   
   this.saveItunesLibraryMusicFolders = function(entries) {
@@ -91,7 +79,34 @@ function Persistence(model){
     })
     return this.storage.set({"itunesMusicFolders": ids})
   }
+
+  function restoreEntry(id)
+  {
+    console.log("restore entry called with id = " + id)
+    if (id == null)
+    {
+      return Q.when(null)
+    }
+    
+    var deferred = Q.defer()
+    chrome.fileSystem.isRestorable(id, function(restorable)
+    {
+      console.log("the id is restorable? " + restorable)
+      if (!restorable)
+      {
+        deferred.reject("weird: file is not restorable: " + id)
+      }
+      
+      chrome.fileSystem.restoreEntry(id, function(entry)
+      {
+        console.log("resolving the deferred for the id " + id)
+        deferred.resolve(entry)
+      })
+    })
+    return deferred.promise
+  }
   
+  // TODO: remove this in favor of the promise-using version
   function restoreEntryOrNull(id, callback)
   {
     if (id == null)
@@ -117,10 +132,8 @@ function Persistence(model){
   }
   
   this.getItunesLibraryMusicFolders = function(callback) {
-    return this.storage.get("itunesMusicFolders").then(function(m)
+    return this.storage.get("itunesMusicFolders").then(function(ids)
     {
-      var ids = m["itunesMusicFolders"]
-      
       if (!ids)
       {
         callback([])
