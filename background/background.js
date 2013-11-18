@@ -28,6 +28,8 @@ var model =
 var persistence = new Persistence()
 var modelDoneLoading = persistence.load(model)
 
+modelDoneLoading.done()  // Report any errors loading the moadel.  TODO: do this bettter
+
 var cmd = newCmd(model, persistence, viewUpdaterRegistry)
 
 // Create any extra things needed for our interface to the outside world.

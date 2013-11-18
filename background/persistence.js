@@ -37,18 +37,18 @@ function Persistence(model){
   }
   
   this.load = function(model) {
-    info = model.itunesLibraryInfo
+    var info = model.itunesLibraryInfo
     
-    this.getItunesMainFileEntry(function(entry)
-    {
-      info.mainFileEntry = entry
-    })
-
     var promises = [
+      this.getItunesMainFileEntry().then(function(entry)
+      {
+        info.mainFileEntry = entry
+      }),
+
       this.getItunesLibraryMusicFolders().then(function(entries)
       {
         info.musicFolders = entries
-      })
+      }),
     ]
     
     return Q.all(promises)
@@ -73,8 +73,8 @@ function Persistence(model){
     return this.storage.set({"itunesMainFileId": stringId})
   }
   
-  this.getItunesMainFileEntry = function(callback) {
-    return this.storage.get("itunesMainFileId").then(restoreEntryOrNull).then(callback)
+  this.getItunesMainFileEntry = function() {
+    return this.storage.get("itunesMainFileId").then(restoreEntryOrNull)
   }
   
   this.saveItunesLibraryMusicFolders = function(entries) {
