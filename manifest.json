@@ -6,6 +6,7 @@
   "app": {
     "background": {
       "scripts": [
+        "background/q.js",
         "background/util.js",
         "background/cmd.js",
         "background/view_updater_registry.js",
