@@ -6,7 +6,40 @@
 // TODO: handle any failures that happen in storage.set
 
 function Persistence(model){
-  this.storage = chrome.storage.local
+  var storageRaw = chrome.storage.local
+  this.storage = {
+    set: function(data)
+    {
+      var deferred = Q.defer()
+      storageRaw.set(data, function() {
+        if(chrome.runtime.lastError)
+        {
+          deferred.reject(chrome.runtime.lastError)
+        }
+        else
+        {
+          deferred.resolve(null)
+        }
+      })
+      return deferred.promise
+    },
+    
+    get: function(keys)
+    {
+      var deferred = Q.defer()
+      storageRaw.get(keys, function(items) {
+        if(chrome.runtime.lastError)
+        {
+          deferred.reject(chrome.runtime.lastError)
+        }
+        else
+        {
+          deferred.resolve(items)
+        }
+      })
+      return deferred.promise
+    }
+  }
   
   this.save = function(model) {
     this.saveItunesLibraryInfo(model.itunesLibraryInfo)
@@ -40,11 +73,11 @@ function Persistence(model){
     {
       stringId = null;
     }
-    this.storage.set({"itunesMainFileId": stringId}, function() {})
+    return this.storage.set({"itunesMainFileId": stringId})
   }
   
   this.getItunesMainFileEntry = function(callback) {
-    this.storage.get("itunesMainFileId", function(m)
+    return this.storage.get("itunesMainFileId").then(function(m)
     {
       restoreEntryOrNull(m["itunesMainFileId"], callback)
     })
@@ -56,7 +89,7 @@ function Persistence(model){
       // We need a function here because chrome.fileSystme.retainEntry is picky about its arguments.
       return chrome.fileSystem.retainEntry(entry)
     })
-    this.storage.set({"itunesMusicFolders": ids}, function() {})
+    return this.storage.set({"itunesMusicFolders": ids})
   }
   
   function restoreEntryOrNull(id, callback)
@@ -84,7 +117,7 @@ function Persistence(model){
   }
   
   this.getItunesLibraryMusicFolders = function(callback) {
-    this.storage.get("itunesMusicFolders", function(m)
+    return this.storage.get("itunesMusicFolders").then(function(m)
     {
       var ids = m["itunesMusicFolders"]
       

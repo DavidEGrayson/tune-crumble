@@ -333,12 +333,22 @@ if (typeof ReturnValue !== "undefined") {
 // we also support Python-style generators.  At some point we can remove
 // this block.
 var hasES6Generators;
-try {
-    /* jshint evil: true, nonew: false */
-    new Function("(function* (){ yield 1; })");
-    hasES6Generators = true;
-} catch (e) {
-    hasES6Generators = false;
+if (window.chrome && window.chrome.app)
+{
+  // Chrome doesn't have ES6 generators yet and the method for detecting them
+  // below wouldn't work anyway because the content-security policy disables
+  // things like "eval" in Chrome Apps.
+  hasES6Generators = false;
+}
+else
+{
+  try {
+      /* jshint evil: true, nonew: false */
+      new Function("(function* (){ yield 1; })");
+      hasES6Generators = true;
+  } catch (e) {
+      hasES6Generators = false;
+  }
 }
 
 // long stack traces
