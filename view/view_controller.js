@@ -28,6 +28,9 @@ function viewRun()
 {
   // Here is basically where the program starts running.
   viewInit()
+  
+  bg.modelDoneLoading.then(function() {
+    updater.all()
+  })
   bg.registerViewUpdater(updater)
-  updater.all()
 }

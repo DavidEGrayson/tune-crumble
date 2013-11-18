@@ -26,7 +26,7 @@ var model =
 }
 
 var persistence = new Persistence()
-persistence.load(model)
+var modelDoneLoading = persistence.load(model)
 
 var cmd = newCmd(model, persistence, viewUpdaterRegistry)
 

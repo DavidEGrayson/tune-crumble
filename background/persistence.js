@@ -38,14 +38,20 @@ function Persistence(model){
   
   this.load = function(model) {
     info = model.itunesLibraryInfo
+    
     this.getItunesMainFileEntry(function(entry)
     {
       info.mainFileEntry = entry
     })
-    this.getItunesLibraryMusicFolders(function(entries)
-    {
-      info.musicFolders = entries
-    })
+
+    var promises = [
+      this.getItunesLibraryMusicFolders().then(function(entries)
+      {
+        info.musicFolders = entries
+      })
+    ]
+    
+    return Q.all(promises)
   }
   
   this.saveItunesLibraryInfo = function(info) {
@@ -82,7 +88,6 @@ function Persistence(model){
 
   function restoreEntryOrNull(id)
   {
-    console.log("restore entry called with id = " + id)
     if (id == null)
     {
       return Q.when(null)
@@ -91,7 +96,6 @@ function Persistence(model){
     var deferred = Q.defer()
     chrome.fileSystem.isRestorable(id, function(restorable)
     {
-      console.log("the id is restorable? " + restorable)
       if (!restorable)
       {
         deferred.reject("weird: file is not restorable: " + id)
@@ -99,14 +103,13 @@ function Persistence(model){
       
       chrome.fileSystem.restoreEntry(id, function(entry)
       {
-        console.log("resolving the deferred for the id " + id)
         deferred.resolve(entry)
       })
     })
     return deferred.promise
   }
     
-  this.getItunesLibraryMusicFolders = function(callback) {
+  this.getItunesLibraryMusicFolders = function() {
     return this.storage.get("itunesMusicFolders").then(function(ids)
     {
       if (!ids)
@@ -116,6 +119,6 @@ function Persistence(model){
         ids = []
       }
       return Q.all(ids.map(restoreEntryOrNull))
-    }).then(callback)
+    })
   }
 }

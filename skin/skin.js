@@ -14,6 +14,9 @@ var updater = {
       var ul = $("ul#itunesMusicFolders")
       ul.empty()
       
+      console.log("fetched music folder names to skin:")
+      console.log(names)
+      
       for(var i = 0; i < names.length; i++)
       {
         var name = names[i];
