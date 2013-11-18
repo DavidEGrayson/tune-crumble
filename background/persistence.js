@@ -105,32 +105,7 @@ function Persistence(model){
     })
     return deferred.promise
   }
-  
-  // TODO: remove this in favor of the promise-using version
-  function restoreEntryOrNull(id, callback)
-  {
-    if (id == null)
-    {
-      callback(null)
-      return
-    }
     
-    chrome.fileSystem.isRestorable(id, function(restorable)
-    {
-      if (!restorable)
-      {
-        console.log("weird: file is not restorable: " + id)
-        callback(null)
-        return;
-      }
-      
-      chrome.fileSystem.restoreEntry(id, function(entry)
-      {
-        callback(entry);
-      })
-    })
-  }
-  
   this.getItunesLibraryMusicFolders = function(callback) {
     return this.storage.get("itunesMusicFolders").then(function(ids)
     {
@@ -139,14 +114,7 @@ function Persistence(model){
         callback([])
         return
       }
-      
-      ids.mapWithCallback(restoreEntryOrNull, function(entries)
-      {
-        // If any of the folders were not restorable, there will be nulls in the
-        // array that we should strip out.
-        entries.delete(null)
-        callback(entries)
-      })      
-    })
+      return Q.all(ids.map(restoreEntry))
+    }).then(callback)
   }
 }
