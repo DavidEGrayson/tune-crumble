@@ -33,7 +33,10 @@ function Persistence(model){
   }
   
   this.save = function(model) {
-    this.saveItunesLibraryInfo(model.itunesLibraryInfo)
+    var promises = [
+      this.saveItunesLibraryInfo(model.itunesLibraryInfo),
+    ]
+    return Q.all(promises)
   }
   
   this.load = function(model) {
@@ -55,8 +58,11 @@ function Persistence(model){
   }
   
   this.saveItunesLibraryInfo = function(info) {
-    this.saveItunesLibraryMainFile(info.mainFileEntry)
-    this.saveItunesLibraryMusicFolders(info.musicFolders)
+    var promises = [
+      this.saveItunesLibraryMainFile(info.mainFileEntry),
+      this.saveItunesLibraryMusicFolders(info.musicFolders),
+    ]
+    return Q.all(promises)
   }
   
   this.saveItunesLibraryMainFile = function(entry)
