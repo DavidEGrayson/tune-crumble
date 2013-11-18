@@ -68,7 +68,7 @@ function Persistence(model){
   }
   
   this.getItunesMainFileEntry = function(callback) {
-    return this.storage.get("itunesMainFileId").then(restoreEntry).then(callback)
+    return this.storage.get("itunesMainFileId").then(restoreEntryOrNull).then(callback)
   }
   
   this.saveItunesLibraryMusicFolders = function(entries) {
@@ -80,7 +80,7 @@ function Persistence(model){
     return this.storage.set({"itunesMusicFolders": ids})
   }
 
-  function restoreEntry(id)
+  function restoreEntryOrNull(id)
   {
     console.log("restore entry called with id = " + id)
     if (id == null)
@@ -111,10 +111,11 @@ function Persistence(model){
     {
       if (!ids)
       {
-        callback([])
-        return
+        // It is normal that the ids array would be null the very first time the
+        // user launches the app.
+        ids = []
       }
-      return Q.all(ids.map(restoreEntry))
+      return Q.all(ids.map(restoreEntryOrNull))
     }).then(callback)
   }
 }
