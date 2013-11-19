@@ -10,7 +10,7 @@ var updater = {
   },
   
   itunesMusicFolders: function() {
-    model.itunesLibraryInfo.getMusicFolderNames(function(names) {
+    model.itunesLibraryInfo.getMusicFolderNames().then(function(names) {
       var ul = $("ul#itunesMusicFolders")
       ul.empty()
       

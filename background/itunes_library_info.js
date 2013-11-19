@@ -32,8 +32,8 @@ ItunesLibraryInfo.prototype =
     return getTimestampOrNull(this.mainFileEntry)
   },
   
-  getMusicFolderNames: function(callback) {
-    getDisplayPathList(this.musicFolders, callback)
+  getMusicFolderNames: function() {
+    return getDisplayPathList(this.musicFolders)
   },
   
 }
