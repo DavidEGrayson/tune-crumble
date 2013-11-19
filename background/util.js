@@ -36,26 +36,26 @@ function restoreEntryOrNull(id)
   return deferred.promise
 }
 
-function getTimestampOrNull(entry, callback)  // TODO: use promises
+function getTimestampOrNull(entry)
 {
-  if (entry)
+  if (entry == null)
   {
-    entry.getMetadata(function(metadata)
-    {
-      callback(metadata.modificationTime);
-    },
-    function(err)
-    {
-      console.log("error getting metadata for entry")
-      console.log(entry)
-      console.log(err)
-      callback(null)
-    });
+    return Q.when(null)
   }
-  else
+  
+  var deferred = Q.defer()
+  entry.getMetadata(function(metadata)
   {
-    callback(null)
-  }
+    deferred.resolve(metadata.modificationTime)
+  },
+  function(err)
+  {
+    console.log("error getting metadata for entry")
+    console.log(entry)
+    console.log(err)
+    deferred.reject(err)
+  })
+  return deferred.promise
 }
 
 function getDisplayPathList(entries, callback)

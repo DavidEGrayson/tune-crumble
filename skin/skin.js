@@ -2,20 +2,17 @@ var updater = {
   itunesMainFile: function() {
     model.itunesLibraryInfo.getMainFileName().then(function(name) {
       $("#itunesMainFile").html(name || "-")
-    })
-    model.itunesLibraryInfo.getMainFileTimestamp(function(stamp) {
+    }).done()
+    model.itunesLibraryInfo.getMainFileTimestamp().then(function(stamp) {
       var str = stamp != null ? stamp.toLocaleString() : "-"
       $("#itunesTimestamp").html(str)
-    })
+    }).done()
   },
   
   itunesMusicFolders: function() {
     model.itunesLibraryInfo.getMusicFolderNames(function(names) {
       var ul = $("ul#itunesMusicFolders")
       ul.empty()
-      
-      console.log("fetched music folder names to skin:")
-      console.log(names)
       
       for(var i = 0; i < names.length; i++)
       {

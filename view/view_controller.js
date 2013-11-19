@@ -31,6 +31,6 @@ function viewRun()
   
   bg.modelDoneLoading.then(function() {
     updater.all()
-  })
+  }).done()
   bg.registerViewUpdater(updater)
 }
