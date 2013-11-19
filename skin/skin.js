@@ -21,7 +21,7 @@ var updater = {
         li.appendChild(document.createTextNode(name))
         ul.append(li)
       }
-    })
+    }).done()
   },
 }
 
