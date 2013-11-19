@@ -1,6 +1,6 @@
 var updater = {
   itunesMainFile: function() {
-    model.itunesLibraryInfo.getMainFileName(function(name) {
+    model.itunesLibraryInfo.getMainFileName().then(function(name) {
       $("#itunesMainFile").html(name || "-")
     })
     model.itunesLibraryInfo.getMainFileTimestamp(function(stamp) {

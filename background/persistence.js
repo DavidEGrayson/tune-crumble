@@ -68,29 +68,6 @@ function Persistence(storage)
     })
     return this.storage.set({"itunesMusicFolders": ids})
   }
-
-  function restoreEntryOrNull(id)
-  {
-    if (id == null)
-    {
-      return Q.when(null)
-    }
-    
-    var deferred = Q.defer()
-    chrome.fileSystem.isRestorable(id, function(restorable)
-    {
-      if (!restorable)
-      {
-        deferred.reject("weird: file is not restorable: " + id)
-      }
-      
-      chrome.fileSystem.restoreEntry(id, function(entry)
-      {
-        deferred.resolve(entry)
-      })
-    })
-    return deferred.promise
-  }
     
   this.getItunesLibraryMusicFolders = function() {
     return this.storage.get("itunesMusicFolders").then(function(ids)

@@ -24,8 +24,8 @@ ItunesLibraryInfo.prototype =
     this.musicFolders.splice(index, 1)
   },
 
-  getMainFileName: function(callback) {
-    getDisplayPathOrNull(this.mainFileEntry, callback)
+  getMainFileName: function() {
+    return getDisplayPathOrNull(this.mainFileEntry)
   },
 
   getMainFileTimestamp: function(callback) {

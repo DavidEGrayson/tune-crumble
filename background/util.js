@@ -1,16 +1,42 @@
-function getDisplayPathOrNull(entry, callback)
+function getDisplayPathOrNull(entry)
 {
-  if (entry)
+  if (entry == null)
   {
-    chrome.fileSystem.getDisplayPath(entry, callback)
+    return Q.when(null)
   }
-  else
+    
+  var deferred = Q.defer()
+  chrome.fileSystem.getDisplayPath(entry, function(path)
   {
-    callback(null)
-  }
+    deferred.resolve(path)
+  })
+  return deferred.promise
 }
 
-function getTimestampOrNull(entry, callback)
+function restoreEntryOrNull(id)
+{
+  if (id == null)
+  {
+    return Q.when(null)
+  }
+  
+  var deferred = Q.defer()
+  chrome.fileSystem.isRestorable(id, function(restorable)
+  {
+    if (!restorable)
+    {
+      deferred.reject("weird: file is not restorable: " + id)
+    }
+    
+    chrome.fileSystem.restoreEntry(id, function(entry)
+    {
+      deferred.resolve(entry)
+    })
+  })
+  return deferred.promise
+}
+
+function getTimestampOrNull(entry, callback)  // TODO: use promises
 {
   if (entry)
   {
@@ -34,6 +60,7 @@ function getTimestampOrNull(entry, callback)
 
 function getDisplayPathList(entries, callback)
 {
+  // TODO: Q.all(entries.map(restoreEntryOrNull))
   entries.mapWithCallback(chrome.fileSystem.getDisplayPath, callback)
 }
 
